@@ -1,7 +1,10 @@
-﻿@{
+﻿@model Crypto_Portfolio_Manager.Models.Bittrex.OrderHistoryResult
+@{
     ViewBag.Title = "About";
 }
 <h2>@ViewBag.Title.</h2>
 <h3>@ViewBag.Message</h3>
+<h4>@model.Exchange</h4>
+<h4>@model.Quantity</h4>
 
 <p>Use this area to provide additional information.</p>

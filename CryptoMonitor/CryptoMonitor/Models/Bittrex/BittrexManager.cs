@@ -91,7 +91,7 @@ namespace Crypto_Portfolio_Manager.Controllers
             return JsonConvert.DeserializeObject<BalancesRequest<BalancesResult[]>>(json);
         }
 
-        private async Task<OrderHistoryRequest<OrderHistoryResult[]>> GetOrderHistory(string apiKey)
+        public async Task<OrderHistoryRequest<OrderHistoryResult[]>> GetOrderHistory(string apiKey)
         {
             var uri = BaseUrl + ApiVersion + OrderHistoryUrl + ApiKeyUrl + apiKey;
 
