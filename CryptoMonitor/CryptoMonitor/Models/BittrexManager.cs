@@ -11,11 +11,16 @@ namespace Crypto_Portfolio_Manager.Controllers
         private string BaseURL = "https://bittrex.com/api/";
         private string ApiVersion = "v1.1";
 
+        private const string MarketSummariesURL = "/getmarketsummaires";
+        private const string TickerURL = "/getticker?market=";
+        private const string CoinsURL = "/getcurrencies";
+        private const string BalancesURL = "getbalances?apikey=";
+
         private HttpClient HttpClient;
 
         public async Task<MarketSummaryRequest<MarketSummaryResult[]>> getMarkets()
         {
-            var uri = BaseURL + ApiVersion + "/getmarketsummaries";
+            var uri = BaseURL + ApiVersion + MarketSummariesURL;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
@@ -28,7 +33,7 @@ namespace Crypto_Portfolio_Manager.Controllers
 
         public async Task<TickerRequest<TickerResult>> getTicker(string Market) 
         {
-            var uri = BaseURL + ApiVersion + "/getticker?market=" + Market;
+            var uri = BaseURL + ApiVersion + TickerURL + Market;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
@@ -41,7 +46,7 @@ namespace Crypto_Portfolio_Manager.Controllers
 
         public async Task<CoinSummaryRequest<CoinSummaryResult[]>> getCoins() 
         {
-            var uri = BaseURL + ApiVersion + "/getcurrencies";
+            var uri = BaseURL + ApiVersion + CoinsURL;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
@@ -53,9 +58,9 @@ namespace Crypto_Portfolio_Manager.Controllers
         }
 
         //Currently privat whilst looking into security risks.
-        private async Task<BalancesRequest<BalancesResult[]>> getBalance() 
+        private async Task<BalancesRequest<BalancesResult[]>> getBalances() 
         {
-            var uri = BaseURL + ApiVersion + "getbalances?apikey=" + generateApiKey();
+            var uri = BaseURL + ApiVersion + BalancesURL + generateApiKey();
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
