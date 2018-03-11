@@ -152,6 +152,7 @@
     <Compile Include="Models\Bittrex\MarketSummaryRequest.cs" />
     <Compile Include="Models\Bittrex\OrderHistoryRequest.cs" />
     <Compile Include="Models\Bittrex\TickerRequest.cs" />
+    <Compile Include="Models\Bittrex\WithdrawalHistoryRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

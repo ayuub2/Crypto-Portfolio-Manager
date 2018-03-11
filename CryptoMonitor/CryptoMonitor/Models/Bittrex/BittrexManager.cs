@@ -11,6 +11,7 @@ namespace Crypto_Portfolio_Manager.Controllers
     {
         private const string BaseUrl = "https://bittrex.com/api/";
         private const string ApiVersion = "v1.1";
+        private const string ApiKeyUrl = "?apikey=";
         private const string MarketSummariesUrl = "/public/getmarketsummaires";
         private const string MarketUrl = "/public/getmarketsummary?market=";
         private const string TickerUrl = "/public/getticker?market=";
@@ -18,7 +19,7 @@ namespace Crypto_Portfolio_Manager.Controllers
         private const string BalancesUrl = "/public/getbalances?apikey=";
         private const string MarketHistoryUrl = "/public/getmarkethistory?market=";
         private const string OrderHistoryUrl = "/account/getorderhistory";
-        private const string ApiKeyUrl = "?apikey=";
+        private const string WithdrawalHistoryUrl = "/account/getwithdrawalhistory";
 
         private readonly HttpClient _httpClient = new HttpClient();
 
@@ -89,9 +90,9 @@ namespace Crypto_Portfolio_Manager.Controllers
             return JsonConvert.DeserializeObject<BalancesRequest<BalancesResult[]>>(json);
         }
 
-        private async Task<OrderHistoryRequest<OrderHistoryResult[]>> getOrderHistory(string apiKey)
+        private async Task<OrderHistoryRequest<OrderHistoryResult[]>> GetOrderHistory(string apiKey)
         {
-            var uri = BaseUrl + ApiVersion + BalancesUrl + OrderHistoryUrl + ApiKeyUrl + apiKey;
+            var uri = BaseUrl + ApiVersion + OrderHistoryUrl + ApiKeyUrl + apiKey;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
@@ -100,6 +101,19 @@ namespace Crypto_Portfolio_Manager.Controllers
             var json = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<OrderHistoryRequest<OrderHistoryResult[]>>(json);
+        }
+
+        private async Task<WithdrawalHistoryRequest<WithdrawalHistoryResult[]>> GetWithdrawalHistory(string apiKey)
+        {
+            var uri = BaseUrl + ApiVersion + WithdrawalHistoryUrl + ApiKeyUrl + apiKey;
+
+            var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
+
+            var response = await _httpClient.SendAsync(request);
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<WithdrawalHistoryRequest<WithdrawalHistoryResult[]>>(json);
         }
 
         //TODO: generate api key
