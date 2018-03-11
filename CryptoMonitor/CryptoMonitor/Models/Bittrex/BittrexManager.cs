@@ -8,10 +8,11 @@ namespace Crypto_Portfolio_Manager.Controllers
 {
     public class BittrexManager
     {
-        private string BaseURL = "https://bittrex.com/api/";
+        private string BaseUrl = "https://bittrex.com/api/";
         private string ApiVersion = "v1.1";
 
         private const string MarketSummariesUrl = "/public/getmarketsummaires";
+        private const string MarketUrl = "/public/getmarketsummary?market=";
         private const string TickerUrl = "/public/getticker?market=";
         private const string CoinsUrl = "/public/getcurrencies";
         private const string BalancesUrl = "/public/getbalances?apikey=";
@@ -20,7 +21,7 @@ namespace Crypto_Portfolio_Manager.Controllers
 
         public async Task<MarketSummaryRequest<MarketSummaryResult[]>> GetMarkets()
         {
-            var uri = BaseURL + ApiVersion + MarketSummariesUrl;
+            var uri = BaseUrl + ApiVersion + MarketSummariesUrl;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
@@ -31,9 +32,22 @@ namespace Crypto_Portfolio_Manager.Controllers
             return JsonConvert.DeserializeObject<MarketSummaryRequest<MarketSummaryResult[]>>(json);
         }
 
+        public async Task<MarketSummaryRequest<MarketSummaryResult>> GetMarketFor(string market)
+        {
+            var uri = BaseUrl + ApiVersion + MarketUrl + "btc-" + market.ToLower();
+
+            var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
+
+            var response = await _httpClient.SendAsync(request);
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<MarketSummaryRequest<MarketSummaryResult>>(json);
+        }
+
         public async Task<TickerRequest<TickerResult>> GetTicker(string market) 
         {
-            var uri = BaseURL + ApiVersion + TickerUrl + market;
+            var uri = BaseUrl + ApiVersion + TickerUrl + market;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
@@ -46,7 +60,7 @@ namespace Crypto_Portfolio_Manager.Controllers
 
         public async Task<CoinSummaryRequest<CoinSummaryResult[]>> GetCoins() 
         {
-            var uri = BaseURL + ApiVersion + CoinsUrl;
+            var uri = BaseUrl + ApiVersion + CoinsUrl;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
@@ -61,7 +75,7 @@ namespace Crypto_Portfolio_Manager.Controllers
         //Currently private whilst looking into security risks.
         private async Task<BalancesRequest<BalancesResult[]>> GetBalances() 
         {
-            var uri = BaseURL + ApiVersion + BalancesUrl + generateApiKey();
+            var uri = BaseUrl + ApiVersion + BalancesUrl + generateApiKey();
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
