@@ -1,14 +1,14 @@
 ﻿using System;
 namespace Crypto_Portfolio_Manager.Models
 {
-    public struct CoinSummaryRequest<T> 
+    public class CoinSummaryRequest<T> 
     {
         public bool Success { get; set; }
         public string Message { get; set; }
         public T Result { get; set; }
     }
 
-    public struct CoinSummaryResult
+    public class CoinSummaryResult
     {
         public string Currency { get; set; }
         public string CurrencyLong { get; set; }

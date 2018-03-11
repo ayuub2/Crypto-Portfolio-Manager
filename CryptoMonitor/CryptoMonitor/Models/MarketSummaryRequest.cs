@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Crypto_Portfolio_Manager.Models
 {
-    public struct MarketSummaryRequest<T>
+    public class MarketSummaryRequest<T>
     {
         public bool Success { get; set; }
         public string Message { get; set; }

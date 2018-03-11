@@ -8,7 +8,7 @@ namespace Crypto_Portfolio_Manager.Models
         public T Result { get; set; }
     }
 
-    public struct TickerResult 
+    public class TickerResult 
     {
         public decimal Bid { get; set; }
         public decimal Ask { get; set; }
