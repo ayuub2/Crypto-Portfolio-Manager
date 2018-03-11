@@ -151,6 +151,7 @@
     <Compile Include="Models\Bittrex\CoinSummaryRequest.cs" />
     <Compile Include="Models\Bittrex\MarketSummaryRequest.cs" />
     <Compile Include="Models\Bittrex\TickerRequest.cs" />
+    <Compile Include="Models\CryptoCompare\CryptoCompareManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
