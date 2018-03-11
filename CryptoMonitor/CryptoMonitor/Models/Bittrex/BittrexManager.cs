@@ -20,6 +20,7 @@ namespace Crypto_Portfolio_Manager.Controllers
         private const string MarketHistoryUrl = "/public/getmarkethistory?market=";
         private const string OrderHistoryUrl = "/account/getorderhistory";
         private const string WithdrawalHistoryUrl = "/account/getwithdrawalhistory";
+        private const string DepositHistoryUrl = "/account/getdeposithistory";
 
         private readonly HttpClient _httpClient = new HttpClient();
 
@@ -114,6 +115,19 @@ namespace Crypto_Portfolio_Manager.Controllers
             var json = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<WithdrawalHistoryRequest<WithdrawalHistoryResult[]>>(json);
+        }
+
+        private async Task<DepositHistoryRequest<DepositHistoryResult[]>> GetDepositHistory(string apiKey)
+        {
+            var uri = BaseUrl + ApiVersion + DepositHistoryUrl + ApiKeyUrl + apiKey;
+
+            var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
+
+            var response = await _httpClient.SendAsync(request);
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<DepositHistoryRequest<DepositHistoryResult[]>>(json);
         }
 
         //TODO: generate api key
