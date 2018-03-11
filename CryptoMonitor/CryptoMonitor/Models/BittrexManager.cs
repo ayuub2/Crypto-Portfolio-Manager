@@ -11,66 +11,68 @@ namespace Crypto_Portfolio_Manager.Controllers
         private string BaseURL = "https://bittrex.com/api/";
         private string ApiVersion = "v1.1";
 
-        private const string MarketSummariesURL = "/getmarketsummaires";
-        private const string TickerURL = "/getticker?market=";
-        private const string CoinsURL = "/getcurrencies";
-        private const string BalancesURL = "getbalances?apikey=";
+        private const string MarketSummariesUrl = "/public/getmarketsummaires";
+        private const string TickerUrl = "/public/getticker?market=";
+        private const string CoinsUrl = "/public/getcurrencies";
+        private const string BalancesUrl = "/public/getbalances?apikey=";
 
-        private HttpClient HttpClient;
+        private readonly HttpClient _httpClient = new HttpClient();
 
-        public async Task<MarketSummaryRequest<MarketSummaryResult[]>> getMarkets()
+        public async Task<MarketSummaryRequest<MarketSummaryResult[]>> GetMarkets()
         {
-            var uri = BaseURL + ApiVersion + MarketSummariesURL;
+            var uri = BaseURL + ApiVersion + MarketSummariesUrl;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
-            var response = await HttpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
 
             var json = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<MarketSummaryRequest<MarketSummaryResult[]>>(json);
         }
 
-        public async Task<TickerRequest<TickerResult>> getTicker(string Market) 
+        public async Task<TickerRequest<TickerResult>> GetTicker(string market) 
         {
-            var uri = BaseURL + ApiVersion + TickerURL + Market;
+            var uri = BaseURL + ApiVersion + TickerUrl + market;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
-            var response = await HttpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
 
             var json = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<TickerRequest<TickerResult>>(json);
         }
 
-        public async Task<CoinSummaryRequest<CoinSummaryResult[]>> getCoins() 
+        public async Task<CoinSummaryRequest<CoinSummaryResult[]>> GetCoins() 
         {
-            var uri = BaseURL + ApiVersion + CoinsURL;
+            var uri = BaseURL + ApiVersion + CoinsUrl;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
-            var response = await HttpClient.SendAsync(request);
+
+            var response = await _httpClient.SendAsync(request);
 
             var json = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<CoinSummaryRequest<CoinSummaryResult[]>>(json);
         }
 
-        //Currently privat whilst looking into security risks.
-        private async Task<BalancesRequest<BalancesResult[]>> getBalances() 
+        //Currently private whilst looking into security risks.
+        private async Task<BalancesRequest<BalancesResult[]>> GetBalances() 
         {
-            var uri = BaseURL + ApiVersion + BalancesURL + generateApiKey();
+            var uri = BaseURL + ApiVersion + BalancesUrl + generateApiKey();
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
-            var response = await HttpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
 
             var json = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<BalancesRequest<BalancesResult[]>>(json);
         }
 
+        //TODO: generate api key
         private string generateApiKey() {
             return "";
         }

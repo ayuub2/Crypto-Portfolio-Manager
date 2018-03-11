@@ -1,7 +1,11 @@
-﻿@{
+﻿@model Crypto_Portfolio_Manager.Models.CoinSummaryResult
+@{
     ViewBag.Title = "About";
 }
 <h2>@ViewBag.Title.</h2>
 <h3>@ViewBag.Message</h3>
+<h4>@Model.Currency</h4>
+<h4>@Model.CoinType</h4>
+<h4>@Model.TxFee</h4>
 
 <p>Use this area to provide additional information.</p>
