@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using CryptoMonitor.Models.Bittrex;
 using Newtonsoft.Json;
@@ -25,6 +26,25 @@ namespace Crypto_Portfolio_Manager.Controllers
         private const string DepositHistoryUrl = "/account/getdeposithistory";
 
         private readonly HttpClient _httpClient = new HttpClient();
+        private readonly Encoding _encoding = Encoding.UTF8;
+
+        private string apiKey;
+        private string apiSecret;
+        private byte[] apiSecretBytes;
+
+        public BittrexManager()
+        {
+            this.apiKey = null;
+            this.apiSecret = null;
+            this.apiSecretBytes = null;
+        }
+
+        public BittrexManager(string apiKey, string apiSecret)
+        {
+            this.apiKey = apiKey;
+            this.apiSecret = apiSecret;
+            this.apiSecretBytes = _encoding.GetBytes(apiSecret);
+        }
 
         public async Task<MarketSummaryRequest<MarketSummaryResult[]>> GetMarkets()
         {
@@ -80,10 +100,11 @@ namespace Crypto_Portfolio_Manager.Controllers
         }
 
         //Currently private whilst looking into security risks.
-        //Might require nonce and api secret
-        private async Task<BalancesRequest<BalancesResult[]>> GetBalances(string apiKey, string apiSecret) 
+        private async Task<BalancesRequest<BalancesResult[]>> GetBalances() 
         {
-            var uri = BaseUrl + ApiVersion + BalancesUrl + ApiKey + apiKey + Nonce + GenerateNonce() + ApiSecret + apiSecret;
+            var parameters = ApiKey + apiKey + Nonce + GenerateNonce() + ApiSecret + apiSecret;
+
+            var uri = BaseUrl + ApiVersion + BalancesUrl + parameters;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
@@ -94,10 +115,11 @@ namespace Crypto_Portfolio_Manager.Controllers
             return JsonConvert.DeserializeObject<BalancesRequest<BalancesResult[]>>(json);
         }
 
-        //Might require nonce and api secret
-        private async Task<OrderHistoryRequest<OrderHistoryResult[]>> GetOrderHistory(string apiKey, string apiSecret)
+        private async Task<OrderHistoryRequest<OrderHistoryResult[]>> GetOrderHistory()
         {
-            var uri = BaseUrl + ApiVersion + OrderHistoryUrl + ApiKey + apiKey + Nonce + GenerateNonce() + ApiSecret + apiSecret;
+            var parameters = ApiKey + apiKey + Nonce + GenerateNonce() + ApiSecret + apiSecret;
+
+            var uri = BaseUrl + ApiVersion + OrderHistoryUrl + parameters;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
@@ -108,10 +130,11 @@ namespace Crypto_Portfolio_Manager.Controllers
             return JsonConvert.DeserializeObject<OrderHistoryRequest<OrderHistoryResult[]>>(json);
         }
 
-        //Might require nonce and api secret
-        private async Task<WithdrawalHistoryRequest<WithdrawalHistoryResult[]>> GetWithdrawalHistory(string apiKey, string apiSecret)
+        private async Task<WithdrawalHistoryRequest<WithdrawalHistoryResult[]>> GetWithdrawalHistory()
         {
-            var uri = BaseUrl + ApiVersion + WithdrawalHistoryUrl + ApiKey + apiKey + Nonce + GenerateNonce() + ApiSecret + apiSecret;
+            var parameters = ApiKey + apiKey + Nonce + GenerateNonce() + ApiSecret + apiSecret;
+
+            var uri = BaseUrl + ApiVersion + WithdrawalHistoryUrl + parameters;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
@@ -122,9 +145,11 @@ namespace Crypto_Portfolio_Manager.Controllers
             return JsonConvert.DeserializeObject<WithdrawalHistoryRequest<WithdrawalHistoryResult[]>>(json);
         }
 
-        private async Task<DepositHistoryRequest<DepositHistoryResult[]>> GetDepositHistory(string apiKey, string apiSecret)
+        private async Task<DepositHistoryRequest<DepositHistoryResult[]>> GetDepositHistory()
         {
-            var uri = BaseUrl + ApiVersion + DepositHistoryUrl + ApiKey + apiKey + Nonce + GenerateNonce() + ApiSecret + apiSecret;
+            var parameters = ApiKey + apiKey + Nonce + GenerateNonce() + ApiSecret + apiSecret;
+
+            var uri = BaseUrl + ApiVersion + DepositHistoryUrl + parameters;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
