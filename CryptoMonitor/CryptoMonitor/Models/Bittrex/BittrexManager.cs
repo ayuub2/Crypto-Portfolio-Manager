@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CryptoMonitor.Models.Bittrex;
 using Newtonsoft.Json;
 using Crypto_Portfolio_Manager.Models;
+using System.Security.Cryptography;
 
 namespace Crypto_Portfolio_Manager.Controllers
 {
@@ -166,5 +167,17 @@ namespace Crypto_Portfolio_Manager.Controllers
             var nonce = DateTime.Now.Ticks;
             return nonce.ToString();
         }
+
+        //TODO generate hash text
+        //private string GenerateHashText(string uri)
+        //{
+        //    var uriBytes = _encoding.GetBytes(uri);
+
+        //    using (var hmac = new HMACSHA512(apiSecretBytes))
+        //    {
+        //        var hash = hmac.ComputeHash(uriBytes);
+        //        var hashText = 
+        //    }
+        //}
     }
 }
