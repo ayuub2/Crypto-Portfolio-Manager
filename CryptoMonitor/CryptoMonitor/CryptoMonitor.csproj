@@ -142,15 +142,15 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Models\BittrexManager.cs" />
+    <Compile Include="Models\Bittrex\BittrexManager.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\BalancesRequest.cs" />
-    <Compile Include="Models\CoinSummaryRequest.cs" />
-    <Compile Include="Models\MarketSummaryRequest.cs" />
-    <Compile Include="Models\TickerRequest.cs" />
+    <Compile Include="Models\Bittrex\BalancesRequest.cs" />
+    <Compile Include="Models\Bittrex\CoinSummaryRequest.cs" />
+    <Compile Include="Models\Bittrex\MarketSummaryRequest.cs" />
+    <Compile Include="Models\Bittrex\TickerRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
