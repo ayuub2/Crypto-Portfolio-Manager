@@ -11,7 +11,9 @@ namespace Crypto_Portfolio_Manager.Controllers
     {
         private const string BaseUrl = "https://bittrex.com/api/";
         private const string ApiVersion = "v1.1";
-        private const string ApiKeyUrl = "?apikey=";
+        private const string ApiKey = "?apikey=";
+        private const string Nonce = "&nonce=";
+        private const string ApiSecret = "&apisecret=";
         private const string MarketSummariesUrl = "/public/getmarketsummaires";
         private const string MarketUrl = "/public/getmarketsummary?market=";
         private const string TickerUrl = "/public/getticker?market=";
@@ -78,6 +80,7 @@ namespace Crypto_Portfolio_Manager.Controllers
         }
 
         //Currently private whilst looking into security risks.
+        //Might require nonce and api secret
         private async Task<BalancesRequest<BalancesResult[]>> GetBalances() 
         {
             var uri = BaseUrl + ApiVersion + BalancesUrl + generateApiKey();
@@ -91,9 +94,10 @@ namespace Crypto_Portfolio_Manager.Controllers
             return JsonConvert.DeserializeObject<BalancesRequest<BalancesResult[]>>(json);
         }
 
-        public async Task<OrderHistoryRequest<OrderHistoryResult[]>> GetOrderHistory(string apiKey)
+        //Might require nonce and api secret
+        public async Task<OrderHistoryRequest<OrderHistoryResult[]>> GetOrderHistory(string apiKey, string nonce, string apiSecret)
         {
-            var uri = BaseUrl + ApiVersion + OrderHistoryUrl + ApiKeyUrl + apiKey;
+            var uri = BaseUrl + ApiVersion + OrderHistoryUrl + ApiKey + apiKey + Nonce + nonce + ApiSecret + apiSecret;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
@@ -104,9 +108,10 @@ namespace Crypto_Portfolio_Manager.Controllers
             return JsonConvert.DeserializeObject<OrderHistoryRequest<OrderHistoryResult[]>>(json);
         }
 
+        //Might require nonce and api secret
         private async Task<WithdrawalHistoryRequest<WithdrawalHistoryResult[]>> GetWithdrawalHistory(string apiKey)
         {
-            var uri = BaseUrl + ApiVersion + WithdrawalHistoryUrl + ApiKeyUrl + apiKey;
+            var uri = BaseUrl + ApiVersion + WithdrawalHistoryUrl + ApiKey + apiKey;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
@@ -117,9 +122,9 @@ namespace Crypto_Portfolio_Manager.Controllers
             return JsonConvert.DeserializeObject<WithdrawalHistoryRequest<WithdrawalHistoryResult[]>>(json);
         }
 
-        private async Task<DepositHistoryRequest<DepositHistoryResult[]>> GetDepositHistory(string apiKey)
+        private async Task<DepositHistoryRequest<DepositHistoryResult[]>> GetDepositHistory(string apiKey, string nonce, string apiSecret)
         {
-            var uri = BaseUrl + ApiVersion + DepositHistoryUrl + ApiKeyUrl + apiKey;
+            var uri = BaseUrl + ApiVersion + DepositHistoryUrl + ApiKey + apiKey + Nonce + nonce + ApiSecret + apiSecret;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
