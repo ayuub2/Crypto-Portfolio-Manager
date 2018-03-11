@@ -81,9 +81,9 @@ namespace Crypto_Portfolio_Manager.Controllers
 
         //Currently private whilst looking into security risks.
         //Might require nonce and api secret
-        private async Task<BalancesRequest<BalancesResult[]>> GetBalances() 
+        private async Task<BalancesRequest<BalancesResult[]>> GetBalances(string apiKey, string nonce, string apiSecret) 
         {
-            var uri = BaseUrl + ApiVersion + BalancesUrl + generateApiKey();
+            var uri = BaseUrl + ApiVersion + BalancesUrl + ApiKey + apiKey + Nonce + nonce + ApiSecret + apiSecret;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
@@ -95,9 +95,9 @@ namespace Crypto_Portfolio_Manager.Controllers
         }
 
         //Might require nonce and api secret
-        private async Task<OrderHistoryRequest<OrderHistoryResult[]>> GetOrderHistory(string apiKey)
+        private async Task<OrderHistoryRequest<OrderHistoryResult[]>> GetOrderHistory(string apiKey, string nonce, string apiSecret)
         {
-            var uri = BaseUrl + ApiVersion + OrderHistoryUrl + ApiKey + apiKey;
+            var uri = BaseUrl + ApiVersion + OrderHistoryUrl + ApiKey + apiKey + Nonce + nonce + ApiSecret + apiSecret;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
@@ -109,9 +109,9 @@ namespace Crypto_Portfolio_Manager.Controllers
         }
 
         //Might require nonce and api secret
-        private async Task<WithdrawalHistoryRequest<WithdrawalHistoryResult[]>> GetWithdrawalHistory(string apiKey)
+        private async Task<WithdrawalHistoryRequest<WithdrawalHistoryResult[]>> GetWithdrawalHistory(string apiKey, string nonce, string apiSecret)
         {
-            var uri = BaseUrl + ApiVersion + WithdrawalHistoryUrl + ApiKey + apiKey;
+            var uri = BaseUrl + ApiVersion + WithdrawalHistoryUrl + ApiKey + apiKey + Nonce + nonce + ApiSecret + apiSecret;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
