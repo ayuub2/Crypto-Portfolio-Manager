@@ -8,9 +8,8 @@ namespace Crypto_Portfolio_Manager.Controllers
 {
     public class BittrexManager
     {
-        private string BaseUrl = "https://bittrex.com/api/";
-        private string ApiVersion = "v1.1";
-
+        private const string BaseUrl = "https://bittrex.com/api/";
+        private const string ApiVersion = "v1.1";
         private const string MarketSummariesUrl = "/public/getmarketsummaires";
         private const string MarketUrl = "/public/getmarketsummary?market=";
         private const string TickerUrl = "/public/getticker?market=";
