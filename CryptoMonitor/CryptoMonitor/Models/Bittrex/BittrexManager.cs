@@ -138,17 +138,31 @@ namespace Crypto_Portfolio_Manager.Controllers
 
         public async Task<OrderHistoryRequest<OrderHistoryResult[]>> GetOrderHistory()
         {
-            var parameters = ApiKey + apiKey + Nonce + GenerateNonce() + ApiSecret + apiSecret;
+            var parameters = ApiKey + apiKey + Nonce + GenerateNonce();// + ApiSecret + apiSecret;
+
+            System.Diagnostics.Debug.WriteLine(parameters);
 
             var uri = BaseUrl + ApiVersion + OrderHistoryUrl + parameters;
 
+            System.Diagnostics.Debug.WriteLine(uri);
+
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
-            request.Headers.Add(SignHeader, GenerateHashText(uri));
+            var hashResult = GenerateHashText(uri);
+
+            request.Headers.Add(SignHeader, hashResult);
 
             var response = await _httpClient.SendAsync(request);
 
+            System.Diagnostics.Debug.WriteLine("Status:" + response.StatusCode);
+            System.Diagnostics.Debug.WriteLine("Content:" + response.Content);
+            System.Diagnostics.Debug.WriteLine("Headers:" + response.Headers);
+
             var json = await response.Content.ReadAsStringAsync();
+
+            var check = JsonConvert.DeserializeObject<OrderHistoryRequest<OrderHistoryResult[]>>(json);
+
+            System.Diagnostics.Debug.WriteLine("Success: " + check.Success, "Message: " + check.Message);
 
             return JsonConvert.DeserializeObject<OrderHistoryRequest<OrderHistoryResult[]>>(json);
         }
@@ -197,9 +211,18 @@ namespace Crypto_Portfolio_Manager.Controllers
             using (var hmac = new HMACSHA512(apiSecretBytes))
             {
                 var hash = hmac.ComputeHash(uriBytes);
-                var hashText = BitConverter.ToString(hash).Replace("-", "");
+                var hashText = byteToString(hash);
+                System.Diagnostics.Debug.WriteLine(hashText);
                 return hashText;
             }
+        }
+
+        private string byteToString(byte[] buff)
+        {
+            string sbinary = "";
+            for (int i = 0; i < buff.Length; i++)
+                sbinary += buff[i].ToString("X2"); /* hex format */
+            return sbinary;
         }
     }
 }
