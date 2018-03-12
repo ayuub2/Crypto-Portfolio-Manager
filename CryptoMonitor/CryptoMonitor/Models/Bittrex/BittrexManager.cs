@@ -11,11 +11,9 @@ namespace Crypto_Portfolio_Manager.Controllers
 {
     public class BittrexManager
     {
+        //Url constants
         private const string BaseUrl = "https://bittrex.com/api/";
         private const string ApiVersion = "v1.1";
-        private const string ApiKey = "?apikey=";
-        private const string Nonce = "&nonce=";
-        private const string ApiSecret = "&apisecret=";
         private const string MarketSummariesUrl = "/public/getmarketsummaires";
         private const string MarketUrl = "/public/getmarketsummary?market=";
         private const string TickerUrl = "/public/getticker?market=";
@@ -25,6 +23,12 @@ namespace Crypto_Portfolio_Manager.Controllers
         private const string OrderHistoryUrl = "/account/getorderhistory";
         private const string WithdrawalHistoryUrl = "/account/getwithdrawalhistory";
         private const string DepositHistoryUrl = "/account/getdeposithistory";
+
+        //Parameter constants
+        private const string ApiKey = "?apikey=";
+        private const string Nonce = "&nonce=";
+        private const string ApiSecret = "&apisecret=";
+        private const string SignHeader = "apisign";
 
         private readonly HttpClient _httpClient = new HttpClient();
         private readonly Encoding _encoding = Encoding.UTF8;
@@ -100,14 +104,15 @@ namespace Crypto_Portfolio_Manager.Controllers
             return JsonConvert.DeserializeObject<CoinSummaryRequest<CoinSummaryResult[]>>(json);
         }
 
-        //Currently private whilst looking into security risks.
-        private async Task<BalancesRequest<BalancesResult[]>> GetBalances() 
+        public async Task<BalancesRequest<BalancesResult[]>> GetBalances() 
         {
             var parameters = ApiKey + apiKey + Nonce + GenerateNonce() + ApiSecret + apiSecret;
 
             var uri = BaseUrl + ApiVersion + BalancesUrl + parameters;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
+
+            request.Headers.Add(SignHeader, GenerateHashText(uri));
 
             var response = await _httpClient.SendAsync(request);
 
@@ -116,13 +121,15 @@ namespace Crypto_Portfolio_Manager.Controllers
             return JsonConvert.DeserializeObject<BalancesRequest<BalancesResult[]>>(json);
         }
 
-        private async Task<OrderHistoryRequest<OrderHistoryResult[]>> GetOrderHistory()
+        public async Task<OrderHistoryRequest<OrderHistoryResult[]>> GetOrderHistory()
         {
             var parameters = ApiKey + apiKey + Nonce + GenerateNonce() + ApiSecret + apiSecret;
 
             var uri = BaseUrl + ApiVersion + OrderHistoryUrl + parameters;
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
+
+            request.Headers.Add(SignHeader, GenerateHashText(uri));
 
             var response = await _httpClient.SendAsync(request);
 
@@ -131,7 +138,7 @@ namespace Crypto_Portfolio_Manager.Controllers
             return JsonConvert.DeserializeObject<OrderHistoryRequest<OrderHistoryResult[]>>(json);
         }
 
-        private async Task<WithdrawalHistoryRequest<WithdrawalHistoryResult[]>> GetWithdrawalHistory()
+        public async Task<WithdrawalHistoryRequest<WithdrawalHistoryResult[]>> GetWithdrawalHistory()
         {
             var parameters = ApiKey + apiKey + Nonce + GenerateNonce() + ApiSecret + apiSecret;
 
@@ -146,7 +153,7 @@ namespace Crypto_Portfolio_Manager.Controllers
             return JsonConvert.DeserializeObject<WithdrawalHistoryRequest<WithdrawalHistoryResult[]>>(json);
         }
 
-        private async Task<DepositHistoryRequest<DepositHistoryResult[]>> GetDepositHistory()
+        public async Task<DepositHistoryRequest<DepositHistoryResult[]>> GetDepositHistory()
         {
             var parameters = ApiKey + apiKey + Nonce + GenerateNonce() + ApiSecret + apiSecret;
 
@@ -168,16 +175,16 @@ namespace Crypto_Portfolio_Manager.Controllers
             return nonce.ToString();
         }
 
-        //TODO generate hash text
-        //private string GenerateHashText(string uri)
-        //{
-        //    var uriBytes = _encoding.GetBytes(uri);
+        private string GenerateHashText(string uri)
+        {
+            var uriBytes = _encoding.GetBytes(uri);
 
-        //    using (var hmac = new HMACSHA512(apiSecretBytes))
-        //    {
-        //        var hash = hmac.ComputeHash(uriBytes);
-        //        var hashText = 
-        //    }
-        //}
+            using (var hmac = new HMACSHA512(apiSecretBytes))
+            {
+                var hash = hmac.ComputeHash(uriBytes);
+                var hashText = BitConverter.ToString(hash).Replace("-", "");
+                return hashText;
+            }
+        }
     }
 }
