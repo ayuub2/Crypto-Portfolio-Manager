@@ -149,6 +149,7 @@
     </Compile>
     <Compile Include="Models\Bittrex\BalancesRequest.cs" />
     <Compile Include="Models\Bittrex\CoinSummaryRequest.cs" />
+    <Compile Include="Models\Bittrex\MarketHistoryRequest.cs" />
     <Compile Include="Models\Bittrex\MarketSummaryRequest.cs" />
     <Compile Include="Models\Bittrex\OrderHistoryRequest.cs" />
     <Compile Include="Models\Bittrex\TickerRequest.cs" />
