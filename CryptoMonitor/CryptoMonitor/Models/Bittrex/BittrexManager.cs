@@ -11,15 +11,16 @@ namespace Crypto_Portfolio_Manager.Controllers
 {
     public class BittrexManager
     {
-        //Url constants
+        //Url constants (public requests)
         private const string BaseUrl = "https://bittrex.com/api/";
         private const string ApiVersion = "v1.1";
         private const string MarketSummariesUrl = "/public/getmarketsummaires";
+        private const string CoinsUrl = "/public/getcurrencies";
         private const string MarketUrl = "/public/getmarketsummary?market=";
         private const string TickerUrl = "/public/getticker?market=";
-        private const string CoinsUrl = "/public/getcurrencies";
-        private const string BalancesUrl = "/public/getbalances?apikey=";
         private const string MarketHistoryUrl = "/public/getmarkethistory?market=";
+        //Url constants (account requests)
+        private const string BalancesUrl = "/account/getbalances";
         private const string OrderHistoryUrl = "/account/getorderhistory";
         private const string WithdrawalHistoryUrl = "/account/getwithdrawalhistory";
         private const string DepositHistoryUrl = "/account/getdeposithistory";
@@ -50,7 +51,8 @@ namespace Crypto_Portfolio_Manager.Controllers
             this.apiSecret = apiSecret;
             this.apiSecretBytes = _encoding.GetBytes(apiSecret);
         }
-
+        
+        //Public requests
         public async Task<MarketSummaryRequest<MarketSummaryResult[]>> GetMarkets()
         {
             var uri = BaseUrl + ApiVersion + MarketSummariesUrl;
@@ -64,9 +66,22 @@ namespace Crypto_Portfolio_Manager.Controllers
             return JsonConvert.DeserializeObject<MarketSummaryRequest<MarketSummaryResult[]>>(json);
         }
 
-        public async Task<MarketSummaryRequest<MarketSummaryResult>> GetMarketFor(string market)
+        public async Task<CoinSummaryRequest<CoinSummaryResult[]>> GetCoins()
         {
-            var uri = BaseUrl + ApiVersion + MarketUrl + "btc-" + market.ToLower();
+            var uri = BaseUrl + ApiVersion + CoinsUrl;
+
+            var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
+
+            var response = await _httpClient.SendAsync(request);
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<CoinSummaryRequest<CoinSummaryResult[]>>(json);
+        }
+
+        public async Task<MarketSummaryRequest<MarketSummaryResult>> GetMarketFor(string market, string crypto)
+        {
+            var uri = BaseUrl + ApiVersion + MarketUrl + market.ToLower() + "-" + crypto.ToLower();
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
 
@@ -90,20 +105,20 @@ namespace Crypto_Portfolio_Manager.Controllers
             return JsonConvert.DeserializeObject<TickerRequest<TickerResult>>(json);
         }
 
-        public async Task<CoinSummaryRequest<CoinSummaryResult[]>> GetCoins() 
+        public async Task<MarketHistoryRequest<MarketHistoryResult[]>> GetMarketHistory(string market, string crypto)
         {
-            var uri = BaseUrl + ApiVersion + CoinsUrl;
+            var uri = BaseUrl + ApiVersion + MarketHistoryUrl + market.ToUpper() + "-" + crypto.ToUpper();
 
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri(uri));
-
 
             var response = await _httpClient.SendAsync(request);
 
             var json = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<CoinSummaryRequest<CoinSummaryResult[]>>(json);
+            return JsonConvert.DeserializeObject<MarketHistoryRequest<MarketHistoryResult[]>>(json);
         }
 
+        //Account requests
         public async Task<BalancesRequest<BalancesResult[]>> GetBalances() 
         {
             var parameters = ApiKey + apiKey + Nonce + GenerateNonce() + ApiSecret + apiSecret;
